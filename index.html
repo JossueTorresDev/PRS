@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <link rel="icon" type="image/png" href="https://i.imgur.com/Rouy0lF.png" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>SL-SIPREB - Sistema Patrimonial San Luis</title>
+    <meta
+      name="description"
+      content="Sistema Multi-Tenant de Control Patrimonial para Municipalidades"
+    />
+  </head>
+  <body>
+    <div id="root">
+      <!-- Pantalla de carga Moderna - Estilo Login -->
+      <div
+        id="loading-screen"
+        style="
+          position: fixed;
+          top: 0;
+          left: 0;
+          width: 100%;
+          height: 100%;
+          background: linear-gradient(135deg, #0f172a 0%, #1e293b 50%, #0f172a 100%);
+          display: flex;
+          flex-direction: column;
+          justify-content: center;
+          align-items: center;
+          z-index: 9999;
+          font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+        "
+      >
+        <!-- Fondo con efecto sutil -->
+        <div style="
+          position: absolute;
+          inset: 0;
+          opacity: 0.1;
+          background: radial-gradient(circle at 30% 40%, rgba(251,191,36,0.3) 0%, transparent 50%),
+                      radial-gradient(circle at 70% 60%, rgba(59,130,246,0.2) 0%, transparent 50%);
+        "></div>
+
+        <!-- Card moderna -->
+        <div
+          style="
+            background: rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(10px);
+            border-radius: 24px;
+            padding: 56px 72px;
+            border: 1px solid rgba(251, 191, 36, 0.2);
+            text-align: center;
+            max-width: 420px;
+            position: relative;
+            box-shadow: 0 25px 80px rgba(0, 0, 0, 0.4), 0 0 0 1px rgba(251, 191, 36, 0.1);
+          "
+        >
+          <!-- Línea dorada superior -->
+          <div style="
+            position: absolute;
+            top: 0;
+            left: 20%;
+            right: 20%;
+            height: 2px;
+            background: linear-gradient(90deg, transparent, #fbbf24, transparent);
+            border-radius: 2px;
+          "></div>
+
+          <!-- Icono de edificio municipal -->
+          <div style="
+            width: 64px;
+            height: 64px;
+            background: linear-gradient(135deg, #fbbf24 0%, #f59e0b 100%);
+            border-radius: 16px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 24px auto;
+            box-shadow: 0 8px 32px rgba(251, 191, 36, 0.3);
+          ">
+            <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"/>
+            </svg>
+          </div>
+
+          <!-- Título -->
+          <h1
+            style="
+              color: #ffffff;
+              font-size: 36px;
+              font-weight: 700;
+              margin: 0 0 8px 0;
+              letter-spacing: -0.5px;
+            "
+          >
+            SIPREB
+          </h1>
+
+          <p
+            style="
+              color: #94a3b8;
+              font-size: 16px;
+              margin: 0 0 40px 0;
+              font-weight: 500;
+              letter-spacing: 0.5px;
+            "
+          >
+            Sistema Patrimonial Municipal
+          </p>
+
+          <!-- Animación de carga moderna -->
+          <div
+            style="
+              display: flex;
+              justify-content: center;
+              align-items: center;
+              gap: 6px;
+            "
+          >
+            <div
+              style="
+                width: 8px;
+                height: 8px;
+                background: #fbbf24;
+                border-radius: 50%;
+                animation: modernPulse 1.4s ease-in-out infinite;
+                animation-delay: 0s;
+              "
+            ></div>
+            <div
+              style="
+                width: 8px;
+                height: 8px;
+                background: #fbbf24;
+                border-radius: 50%;
+                animation: modernPulse 1.4s ease-in-out infinite;
+                animation-delay: 0.2s;
+              "
+            ></div>
+            <div
+              style="
+                width: 8px;
+                height: 8px;
+                background: #fbbf24;
+                border-radius: 50%;
+                animation: modernPulse 1.4s ease-in-out infinite;
+                animation-delay: 0.4s;
+              "
+            ></div>
+          </div>
+        </div>
+
+        <!-- Footer sutil -->
+        <div style="
+          position: absolute;
+          bottom: 32px;
+          left: 50%;
+          transform: translateX(-50%);
+          color: #64748b;
+          font-size: 12px;
+          letter-spacing: 0.5px;
+        ">
+          Cargando sistema...
+        </div>
+      </div>
+
+      <style>
+        @keyframes modernPulse {
+          0%, 100% {
+            transform: scale(0.6);
+            opacity: 0.4;
+          }
+          50% {
+            transform: scale(1);
+            opacity: 1;
+          }
+        }
+      </style>
+    </div>
+    <!-- RUNTIME_CONFIG -->
+    <script type="module" src="/src/main.jsx"></script>
+  </body>
+</html>

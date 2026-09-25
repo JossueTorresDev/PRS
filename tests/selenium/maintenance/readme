@@ -1,0 +1,184 @@
+# Pruebas Selenium — Módulo de Mantenimiento
+
+## Estructura de archivos
+
+```
+tests/selenium/maintenance/
+├── mantenimiento.test.js      # Prueba funcional: crear solicitud + verificar detalle
+├── seguridad.test.js          # Pruebas de seguridad: SQL Injection + IDOR
+├── pages/
+│   ├── MantenimientoListPage.js   # Page Object para la lista de mantenimientos
+│   └── MantenimientoFormModal.js  # Page Object para el formulario de creación
+└── package.json
+```
+
+---
+
+## 1. Prueba funcional (`mantenimiento.test.js`)
+
+**Comando:** `npm run test:maintenance`
+
+### Qué hace
+
+Un único caso de prueba que valida el flujo completo de **creación de una solicitud de mantenimiento** y la **apertura del panel de detalle**.
+
+### Flujo paso a paso
+
+1. **Login** — Se inicia sesión con credenciales de administrador (`MunicipalidadDeCanete` / `Admin@2026`) a través de `LoginPage`.
+
+2. **Navegar a `/mantenimientos`** — Se carga el módulo y se verifica cuántos registros existen en la tabla.
+
+3. **Abrir formulario "Nueva Solicitud"** — Se hace clic en el botón `Nueva Solicitud` y se espera que aparezca el modal con el título `Nuevo Mantenimiento`.
+
+4. **Seleccionar activo** — Se abre el picker de activos y se selecciona el primer activo disponible de la lista.
+
+5. **Seleccionar categoría: Preventivo** — Se hace clic en el botón de tipo `Preventivo`.
+
+6. **Ingresar fecha programada** — Se completa el `DateFieldGroup` con la fecha del día siguiente (DD/MM/YYYY).
+
+7. **Ingresar descripción del trabajo** — Se escribe `"Mantenimiento preventivo programado Selenium"` en el textarea de descripción.
+
+8. **Ingresar problema reportado** — Se escribe `"Revisión preventivo programada según cronograma."` en el textarea de problema.
+
+9. **Seleccionar responsable técnico** — Selecciona la segunda opción del select de personas (la primera es "Seleccionar persona").
+
+10. **Guardar formulario** — Se hace clic en `Registrar Mantenimiento`, se espera la respuesta del servidor y se cierra el SweetAlert de confirmación.
+
+11. **Verificar en tabla** — Se comprueba que la tabla ahora tiene al menos 1 fila y que contiene el texto `"Programado"`.
+
+12. **Abrir detalle** — Se hace clic en la primera fila de la tabla para abrir el panel lateral de detalle.
+
+13. **Verificar panel de detalle** — Se confirma que aparece el encabezado `"Expediente municipal"` y que el panel es visible.
+
+14. **Verificar pestaña Repuestos** — Se confirma que existe la pestaña `Repuestos` dentro del detalle.
+
+### Criterio de aceptación
+
+```
+✔ La solicitud se crea exitosamente
+✔ Aparece en la tabla con estado "Programado"
+✔ El panel de detalle se abre correctamente al hacer clic en la fila
+✔ La pestaña "Repuestos" está disponible en el detalle
+```
+
+---
+
+## 2. Pruebas de seguridad (`seguridad.test.js`)
+
+**Comando:** `npm run test:maintenance:security`
+
+### 2.1 SQL Injection en formulario
+
+**Cantidad de pruebas:** 6
+
+**Descripción:** Se inyectan payloads SQL en los campos de texto del formulario de creación de mantenimiento para verificar que la aplicación no vulnerable a inyección SQL.
+
+#### Payloads probados
+
+| # | Payload | Tipo de ataque |
+|---|---------|----------------|
+| 1 | `'; DROP TABLE maintenances; --` | Eliminación de tabla |
+| 2 | `1' OR '1'='1` | Bypass de autenticación |
+| 3 | `admin'--` | Inyección de usuario |
+| 4 | `1; UPDATE maintenances SET maintenanceStatus='CONFIRMED' WHERE 1=1; --` | Manipulación masiva de datos |
+| 5 | `' UNION SELECT username, password FROM users --` | Extracción de datos |
+| 6 | `1' AND SLEEP(5) --` | Ataque de tiempo (blind SQL injection) |
+
+#### Flujo de cada prueba
+
+1. Navegar a `/mantenimientos`
+2. Abrir el formulario "Nueva Solicitud"
+3. Inyectar el payload SQL en el campo **Descripción del trabajo**
+4. Inyectar el mismo payload en el campo **Problema reportado**
+5. Verificar que **NO** aparece:
+   - Error HTTP 500 / Internal Server Error
+   - Stack trace de Spring (`org.springframework`)
+   - Excepciones SQL (`java.sql.`, `PSQLException`, `SQLException`)
+   - Errores de sintaxis de base de datos
+6. Verificar que el formulario sigue visible y funcional (`Nuevo Mantenimiento` presente en el DOM)
+7. Cerrar el formulario
+
+#### Criterio de aceptación
+
+```
+✔ La página NO muestra errores 500 ni stack traces de base de datos
+✔ No se exponen excepciones SQL en el HTML
+✔ El formulario permanece funcional después de cada inyección
+✔ La aplicación maneja los payloads sin crashear
+```
+
+---
+
+### 2.2 IDOR (Insecure Direct Object Reference) en acciones de estado
+
+**Cantidad de pruebas:** 3
+
+**Descripción:** Se intenta manipular la API directamente enviando requests con IDs falsos o transiciones de estado inválidas, verificando que el servidor rechace correctamente estas peticiones.
+
+#### Pruebas
+
+| # | Prueba | Qué valida |
+|---|--------|------------|
+| 1 | **ID inexistente** — `POST /maintenances/00000000-.../start` | La API rechaza iniciar un mantenimiento que no existe (espera 404/403/400) |
+| 2 | **ID falso** — `POST /maintenances/aaaaaaaa-.../complete` | La API rechaza completar un mantenimiento con ID falso (espera 404/403/400) |
+| 3 | **Transición inválida** — Intentar ejecutar una transición de estado que no corresponde al estado actual del mantenimiento | La API rechaza transiciones ilegales como CONFIRMED → IN_PROCESS o SCHEDULED → confirm (espera 400/403/409) |
+
+#### Flujo de cada prueba
+
+1. Login y obtención del token de sesión (`sessionStorage.getItem('accessToken')`)
+2. Ejecución de un `fetch()` directo a la API del gateway con:
+   - Method: `POST`
+   - Headers: `Content-Type: application/json`, `Authorization: Bearer <token>`
+   - Body: payload correspondiente a la acción
+3. Verificación del código de estado HTTP de respuesta
+
+#### Criterio de aceptación
+
+```
+✔ La API retorna 404/403/400 para IDs inexistentes o falsos
+✔ La API retorna 400/403/409 para transiciones de estado inválidas
+✔ No se procesan acciones sobre recursos que no existen
+✔ El flujo de estados se mantiene íntegro (no se permiten saltos ilegales)
+```
+
+---
+
+## Configuración y ejecución
+
+### Variables de entorno
+
+```bash
+BASE_URL=https://lab.vallegrande.edu.pe/sipreb   # URL base del sistema
+SIPREB_USER=MunicipalidadDeCanete                 # Usuario de prueba
+SIPREB_PASS=Admin@2026                            # Contraseña de prueba
+```
+
+### Ejecutar ambas suites
+
+```bash
+# Prueba funcional
+npm run test:maintenance
+
+# Pruebas de seguridad
+npm run test:maintenance:security
+
+# Todas las del módulo
+npm test -- --grep "Mantenimiento"
+```
+
+### Stack tecnológico
+
+- **Framework:** Mocha + Chai
+- **Driver:** Selenium WebDriver + ChromeDriver
+- **Patrón:** Page Object Model (para el login y navegación)
+- **Autenticación:** Se reutiliza la sesión del navegador (cookie/token en sessionStorage)
+
+---
+
+## Limitaciones conocidas
+
+1. **Navegación con `driver.get()`** — Recargar la página completa puede causar que la tabla muestre 0 registros porque el estado de React se pierde. Por eso la prueba funcional evita navegar entre pasos.
+
+2. **Dependencia de datos del servidor** — Las pruebas de IDOR dependen de que existan mantenimientos en la base de datos para poder probar transiciones inválidas.
+
+3. **Menú de acciones (portal React)** — El menú contextual de la tabla se renderiza vía `createPortal` con `position: fixed` y `z-index: 99999`, lo que dificulta la interacción con selectores estándar.

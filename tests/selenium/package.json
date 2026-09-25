@@ -1,0 +1,25 @@
+{
+  "name": "sipreb-selenium-tests",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "test": "mocha patrimonio/*.test.js --timeout 60000",
+    "test:movements": "node ./node_modules/mocha/bin/mocha.js movements/movements.test.js --timeout 300000",
+    "test:suppliers": "node ./node_modules/mocha/bin/mocha.js configuration/suppliers.test.js --timeout 180000",
+    "test:personas": "node ./node_modules/mocha/bin/mocha.js autentication/personas/personas.test.js --timeout 300000",
+    "test:security": "node ./node_modules/mocha/bin/mocha.js autentication/security/security.test.js --timeout 300000",
+    "test:maintenance": "node ./node_modules/mocha/bin/mocha.js maintenance/mantenimiento.test.js --timeout 600000",
+    "test:maintenance:security": "node ./node_modules/mocha/bin/mocha.js maintenance/seguridad.test.js --timeout 600000",
+    "test:security:movements": "node ./node_modules/mocha/bin/mocha.js movements/seguridad.test.js --timeout 300000",
+    "test:categorias": "node ./node_modules/mocha/bin/mocha.js configuration/categorias.test.js --timeout 600000",
+    "test:security:categorias": "node ./node_modules/mocha/bin/mocha.js configuration/seguridad.test.js --timeout 300000",
+    "test:security:inventario": "node ./node_modules/mocha/bin/mocha.js inventario/seguridad.test.js --timeout 300000"
+  },
+  "devDependencies": {
+    "chai": "^5.0.0",
+    "chromedriver": "149.0.4",
+    "edgedriver": "^5.6.1",
+    "mocha": "^11.0.0",
+    "selenium-webdriver": "^4.30.0"
+  }
+}
