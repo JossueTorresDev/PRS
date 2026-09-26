@@ -813,13 +813,23 @@ main {
   }
 
   .brand {
+    display: none;
+  }
+
+  .brand-role {
+    display: inline-flex;
+    padding: 0;
+    border: none;
+    background: transparent;
+    color: #e2e8f0;
+    font-size: 0.7rem;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
-    font-size: 0.76rem;
   }
 
-  .brand-role,
   .brand-tech {
     display: none;
   }
