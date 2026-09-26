@@ -3,7 +3,7 @@ name: Docker Publish
 on:
   push:
     branches:
-      - develop
+      - main
   workflow_dispatch:
 
 jobs:
@@ -34,7 +34,7 @@ jobs:
           tags: |
             type=ref,event=branch
             type=sha
-            type=raw,value=develop
+            type=raw,value=main
 
       - name: Build and push Docker image
         uses: docker/build-push-action@v6
