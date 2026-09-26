@@ -4,6 +4,10 @@ import { profile } from '../../../shared/data/profile'
 export function Hero() {
   return (
     <header className="hero">
+      <div className="hero-ambient-name" aria-hidden="true">
+        Jossué Torres
+      </div>
+
       <div className="hero-content">
         <p className="eyebrow">{profile.title}</p>
         <h1>{profile.name}</h1>

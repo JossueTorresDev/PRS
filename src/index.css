@@ -34,10 +34,16 @@ html {
   scroll-behavior: smooth;
 }
 
+section[id],
+[id] {
+  scroll-margin-top: 100px;
+}
+
 body {
   margin: 0;
   min-width: 320px;
   min-height: 100vh;
+  overflow-x: hidden;
   background:
     radial-gradient(circle at top left, rgba(56, 189, 248, 0.12), transparent 20%),
     radial-gradient(circle at bottom right, rgba(139, 92, 246, 0.14), transparent 28%),
