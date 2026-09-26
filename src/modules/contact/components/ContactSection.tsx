@@ -3,9 +3,10 @@ import { SectionTitle } from '../../../shared/components/SectionTitle'
 import { profile } from '../../../shared/data/profile'
 
 export function ContactSection() {
+  const phoneNumber = profile.phone.replace(/\D/g, '')
   const links = [
     { href: `mailto:${profile.email}`, label: profile.email, icon: Mail },
-    { href: `tel:${profile.phone.replace(/\s+/g, '')}`, label: profile.phone, icon: Phone },
+    { href: `https://wa.me/${phoneNumber}?text=Hola%20Jossue%2C%20me%20gustar%C3%ADa%20hablar%20contigo.`, label: profile.phone, icon: Phone, external: true },
     { href: profile.github, label: 'GitHub', icon: Globe, external: true },
     { href: profile.linkedin, label: 'LinkedIn', icon: ArrowUpRight, external: true },
   ]

@@ -812,22 +812,40 @@ main {
     min-width: 0;
   }
 
+  .brand-block {
+    flex: 1;
+    min-width: 0;
+  }
+
+  .brand-copy {
+    min-width: 0;
+    width: 100%;
+  }
+
+  .brand-line {
+    width: 100%;
+    justify-content: flex-start;
+  }
+
   .brand {
     display: none;
   }
 
   .brand-role {
     display: inline-flex;
+    align-items: center;
     padding: 0;
     border: none;
     background: transparent;
     color: #e2e8f0;
-    font-size: 0.7rem;
+    font-size: 0.68rem;
     letter-spacing: 0.12em;
     text-transform: uppercase;
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
+    flex: 1;
+    min-width: 0;
   }
 
   .brand-tech {
