@@ -43,7 +43,7 @@ function App() {
           <div className="brand-copy">
             <div className="brand-line">
               <div className="brand">Backend</div>
-              <span className="brand-role">Developer</span>
+              <span className="brand-role">DEV</span>
 
               <div className="brand-tech" aria-label="Stack principal">
                 <span title="Java"><Code2 size={13} /></span>

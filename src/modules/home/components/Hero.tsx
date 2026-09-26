@@ -5,7 +5,7 @@ export function Hero() {
   return (
     <header className="hero">
       <div className="hero-ambient-name" aria-hidden="true">
-        Jossué Torres
+        Backend
       </div>
 
       <div className="hero-content">

@@ -1,6 +1,6 @@
 export const profile = {
   name: 'Jheferson Jossue Torres Humareda',
-  title: 'Backend Developer | Java 17 | Spring Boot | Microservicios | Docker | PostgreSQL',
+  title: 'Backend | Java 17 | Spring Boot | Microservicios | Docker | PostgreSQL',
   location: 'San Luis, Cañete, Lima, Perú',
   phone: '+51 917 851 658',
   email: 'jheferson.torres.h@vallegrande.edu.pe',
